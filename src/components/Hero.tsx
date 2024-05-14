@@ -1,14 +1,12 @@
 import hero from "@/assets/hero.png";
 
-import React from "react";
-
 function Hero() {
   return (
     <div>
       <img
         src={hero}
         alt="hero image"
-        className="w-full max-h-[600px] object-cover"
+        className="max-h-[600px] w-full object-cover"
       />
     </div>
   );
