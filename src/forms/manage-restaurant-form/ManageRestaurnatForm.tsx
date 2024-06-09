@@ -50,6 +50,11 @@ function ManageRestaurnatForm({
   const form = useForm<RestaurantFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      restaurantName: "",
+      city: "",
+      country: "",
+      deliveryPrice: 1.5,
+      estimateDeliveryTime: 30,
       cuisines: [],
       menuItems: [{ name: "", price: 0 }],
     },
@@ -86,7 +91,9 @@ function ManageRestaurnatForm({
       );
     });
 
-    formData.append("image", formDataJson.imageFile);
+    formData.append("imageFile", formDataJson.imageFile);
+
+    onSave(formData);
   };
 
   return (

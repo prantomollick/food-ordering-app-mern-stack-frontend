@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 
 function DetailsSection() {
-  const { control } = useFormContext();
+  const { control, register } = useFormContext();
 
   return (
     <div className="space-y-2">
@@ -26,7 +26,7 @@ function DetailsSection() {
           <FormItem>
             <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} {...register("restaurantName")} />
             </FormControl>
             <FormMessage />
           </FormItem>
