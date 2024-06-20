@@ -1,14 +1,16 @@
+import LoadingButton from "@/components/LoadingButton";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
+import { Restaurant } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CuisinesSection from "./CuisinesSection";
 import DetailsSection from "./DetailsSection";
-import MenuSection from "./MenuSection";
 import ImageSection from "./ImageSection";
-import LoadingButton from "@/components/LoadingButton";
-import { Button } from "@/components/ui/button";
+import MenuSection from "./MenuSection";
 
 const formSchema = z.object({
   restaurantName: z.string({ required_error: "Restaurant name is Required" }),
@@ -18,7 +20,7 @@ const formSchema = z.object({
     required_error: "Delivery price is required",
     invalid_type_error: "Must be a valid number",
   }),
-  estimateDeliveryTime: z.coerce.number({
+  estimatedDeliveryTime: z.coerce.number({
     required_error: "Estimated delivery time is required!",
     invalid_type_error: "Must be a valid number",
   }),
@@ -40,12 +42,14 @@ type RestaurantFormData = z.infer<typeof formSchema>;
 
 type ManageRestaurnatFormProps = {
   onSave: (RestaurantFormData: FormData) => void;
+  restaurant?: Restaurant;
   isLoading: boolean;
 };
 
 function ManageRestaurnatForm({
   onSave,
   isLoading,
+  restaurant,
 }: ManageRestaurnatFormProps) {
   const form = useForm<RestaurantFormData>({
     resolver: zodResolver(formSchema),
@@ -54,11 +58,34 @@ function ManageRestaurnatForm({
       city: "",
       country: "",
       deliveryPrice: 1.5,
-      estimateDeliveryTime: 30,
+      estimatedDeliveryTime: 30,
       cuisines: [],
       menuItems: [{ name: "", price: 0 }],
     },
   });
+
+  useEffect(() => {
+    if (!restaurant) return;
+
+    console.log(restaurant);
+
+    const deliveryPriceFormatted = parseInt(
+      (restaurant.deliveryPrice / 100).toFixed(2),
+    );
+
+    const menuItemsFormatted = restaurant.menuItems.map((item) => ({
+      ...item,
+      price: parseInt((item.price / 100).toFixed(2)),
+    }));
+
+    const updateRestaurant = {
+      ...restaurant,
+      deliveryPrice: deliveryPriceFormatted,
+      menuItems: menuItemsFormatted,
+    };
+
+    form.reset(updateRestaurant);
+  }, [restaurant, form]);
 
   const onSubmit = (formDataJson: RestaurantFormData) => {
     //TODO - Convert formDataJson to a new FormData object
@@ -76,7 +103,7 @@ function ManageRestaurnatForm({
 
     formData.append(
       "estimatedDeliveryTime",
-      formDataJson.estimateDeliveryTime.toString(),
+      formDataJson.estimatedDeliveryTime.toString(),
     );
 
     formDataJson.cuisines.forEach((cuisine, index) => {

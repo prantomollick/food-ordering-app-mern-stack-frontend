@@ -30,8 +30,10 @@ function ImageSection() {
                   className="bg-white"
                   type="file"
                   accept=".jpg, .jpeg, .png"
-                  onChange={(e) =>
-                    field.onChange(e.target.files ? e.target.files[0] : null)
+                  onChange={(event) =>
+                    field.onChange(
+                      event.target.files ? event.target.files[0] : null,
+                    )
                   }
                 />
               </FormControl>
